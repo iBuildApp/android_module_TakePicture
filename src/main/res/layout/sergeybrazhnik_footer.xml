@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="64dp"
+              android:background="#4d000000">
+
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:layout_weight="1"
+                  android:padding="5dp"
+                  android:gravity="center_vertical">
+
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="44dp"
+                      android:layout_height="44dp"
+                      android:id="@+id/camera_save_btn"
+                      android:background="@drawable/dnevolin_save_button_background"
+                      android:layout_marginLeft="5dp"
+                      android:layout_marginBottom="2dp" />
+
+    </LinearLayout>
+
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="60dp"
+                  android:layout_height="fill_parent"
+                  android:gravity="center_vertical|center_horizontal">
+        
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="44dp"
+                      android:id="@+id/camera_facebook_btn"
+                      android:layout_height="44dp"
+                      android:background="@drawable/facebook_logo">
+        </LinearLayout>
+        
+    </LinearLayout>
+    
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="60dp"
+                  android:layout_height="fill_parent" android:gravity="center_vertical|center_horizontal">
+        
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="44dp"
+                      android:layout_height="44dp"
+                      android:id="@+id/camera_twitter_btn"
+                      android:background="@drawable/twitter_logo">
+        </LinearLayout>
+        
+    </LinearLayout>
+    
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="60dp"
+                  android:layout_height="fill_parent" android:gravity="center_vertical|center_horizontal">
+        
+        <LinearLayout android:id="@+id/camera_email_btn"
+                      android:orientation="vertical"
+                      android:layout_width="44dp"
+                      android:layout_height="44dp"
+                      android:background="@drawable/dnevolin_email_button_background">
+        </LinearLayout>
+        
+    </LinearLayout>
+    
+</LinearLayout>

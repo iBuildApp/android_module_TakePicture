@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:paddingTop="5dp"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:paddingBottom="5dp"
+                android:id="@+id/romanblack_camera_root">
+                            
+    <RelativeLayout
+        android:id="@+id/romanblack_camera_preview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:paddingBottom="23dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"/>
+                
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/romanblack_camera_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_weight="1.0"
+        android:background="@drawable/romanblack_camera_btn_takepic"
+        android:gravity="center" >
+ 
+        <ImageView
+            android:id="@+id/romanblack_btn_camera_capture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/romanblack_camera_take_button" />
+
+    </LinearLayout>
+        
+</RelativeLayout>

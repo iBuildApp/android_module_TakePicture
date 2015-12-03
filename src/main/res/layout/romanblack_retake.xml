@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:background="@drawable/romanblack_camera_retake_btn"
+              android:gravity="center_vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:id="@+id/imageView" android:layout_gravity="left|center_vertical"
+        android:src="@drawable/romanblack_camera_take_button"
+        android:layout_marginLeft="5dp" android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"/>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/camera_retake"
+        android:id="@+id/textView" android:layout_marginLeft="5dp"
+        android:textColor="#000000" android:textSize="16dp"
+        android:layout_marginRight="5dp" android:textStyle="bold"/>
+    
+</LinearLayout>
