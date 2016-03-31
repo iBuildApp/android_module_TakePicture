@@ -33,6 +33,7 @@ import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import com.appbuilder.sdk.android.AppBuilderModuleMain;
+import com.appbuilder.sdk.android.StartUpActivity;
 import com.appbuilder.sdk.android.Widget;
 import com.appbuilder.sdk.android.authorization.Authorization;
 
@@ -46,6 +47,7 @@ import java.util.List;
  * Main module class. Module entry point.
  * Represents Take a picture widget.
  */
+@StartUpActivity(moduleName = "Camera")
 public class CameraPlugin extends AppBuilderModuleMain {
 
     private final String TAG = "com.ibuildapp.CameraPlugin";
@@ -77,9 +79,11 @@ public class CameraPlugin extends AppBuilderModuleMain {
     private int activeTime = 4;
     private int screenWidth;
     private int screenHeight;
+    // Brazhnik update
     private PackageManager pm;
     private View galery_view;
     Drawable d;
+    // xml btnSaveImage
     private RelativeLayout share_root_layout;
     private LinearLayout retake_layout;
     private LinearLayout btnShareFacebook;
@@ -135,7 +139,7 @@ public class CameraPlugin extends AppBuilderModuleMain {
                 FileOutputStream fos = new FileOutputStream(pictureFile);
                 fos.write(data);
                 fos.close();
-                //try to clean space after saving photo to sdcard
+                // пытаемся почистить место после того как сохранили фоточку на диск
                 System.gc();
                 // destroy camera object
                 stopCamera();
@@ -278,7 +282,11 @@ public class CameraPlugin extends AppBuilderModuleMain {
                         wasCameraClick = true;
 
                         Camera.Parameters parameters = camera.getParameters();
-
+                    /*    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                        parameters.setPictureFormat(ImageFormat.JPEG);
+                        parameters.setAntibanding(Camera.Parameters.ANTIBANDING_AUTO);
+                        parameters.setSceneMode(Camera.Parameters.SCENE_MODE_AUTO);
+*/
                          List<Camera.Size> sizes = parameters.getSupportedPreviewSizes();
                         Camera.Size maxSize = sizes.get(0);
                        for (Camera.Size size : sizes) {
@@ -289,6 +297,7 @@ public class CameraPlugin extends AppBuilderModuleMain {
                         Log.d(TAG, String.format("height = %d, width = %d", maxSize.height, maxSize.width));
 
                         parameters.setPreviewSize(maxSize.width, maxSize.height);
+                        //parameters.setPictureSize(maxSize.width, maxSize.height);
                         camera.setParameters(parameters);
                         camera.takePicture(null, null, mPicture);
                         // play sound
@@ -452,6 +461,8 @@ public class CameraPlugin extends AppBuilderModuleMain {
         camera = Camera.open(); // using IDX only in API level 9
 
         Camera.Parameters cPrm = camera.getParameters();
+      /*  cPrm.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+        cPrm.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);*/
 
         List<Camera.Size> sizesList = cPrm.getSupportedPreviewSizes();
         Camera.Size maxSize1 = sizesList.get(0);
@@ -834,23 +845,27 @@ public class CameraPlugin extends AppBuilderModuleMain {
         if (internet) {
             // btnShareTwitter button
             btnShareTwitter.setEnabled(true);
+//            myIcon = getResources().getDrawable(R.drawable.romanblack_camera_twitter);
             myIcon = getResources().getDrawable(R.drawable.twitter_logo);
             myIcon.clearColorFilter();
             btnShareTwitter.setBackgroundDrawable(myIcon);
 
             // btnShareFacebook button
             btnShareFacebook.setEnabled(true);
+//            myIcon = getResources().getDrawable(R.drawable.romanblack_camera_facebook);
             myIcon = getResources().getDrawable(R.drawable.facebook_logo);
             myIcon.clearColorFilter();
             btnShareFacebook.setBackgroundDrawable(myIcon);
 
             // btnShareEmail button
             btnShareEmail.setEnabled(true);
+//            myIcon = getResources().getDrawable(R.drawable.romanblack_camera_email);
             myIcon = getResources().getDrawable(R.drawable.dnevolin_email_button_background);
             myIcon.clearColorFilter();
             btnShareEmail.setBackgroundDrawable(myIcon);
         } else {
             // btnShareTwitter button
+//            myIcon = getResources().getDrawable(R.drawable.romanblack_camera_twitter);
             myIcon = getResources().getDrawable(R.drawable.twitter_logo);
             matrix = new ColorMatrix();
             matrix.setSaturation(0);
@@ -860,6 +875,7 @@ public class CameraPlugin extends AppBuilderModuleMain {
             btnShareTwitter.setEnabled(false);
 
             // btnShareFacebook button
+//            myIcon = getResources().getDrawable(R.drawable.romanblack_camera_facebook);
             myIcon = getResources().getDrawable(R.drawable.facebook_logo);
             matrix = new ColorMatrix();
             matrix.setSaturation(0);
@@ -869,6 +885,7 @@ public class CameraPlugin extends AppBuilderModuleMain {
             btnShareFacebook.setEnabled(false);
 
             // btnShareEmail button
+//            myIcon = getResources().getDrawable(R.drawable.romanblack_camera_email);
             myIcon = getResources().getDrawable(R.drawable.dnevolin_email_button_background);
             matrix = new ColorMatrix();
             matrix.setSaturation(0);
