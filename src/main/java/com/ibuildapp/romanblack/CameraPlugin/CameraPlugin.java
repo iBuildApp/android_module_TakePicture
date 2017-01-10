@@ -34,6 +34,7 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 import com.appbuilder.sdk.android.AppBuilderModuleMain;
 import com.appbuilder.sdk.android.StartUpActivity;
+import com.appbuilder.sdk.android.Utils;
 import com.appbuilder.sdk.android.Widget;
 import com.appbuilder.sdk.android.authorization.Authorization;
 
@@ -247,10 +248,6 @@ public class CameraPlugin extends AppBuilderModuleMain {
                 handler.sendEmptyMessageDelayed(INITIALIZATION_FAILED, 100);
                 return;
             }
-            if (widget.getPluginXmlData().length() == 0) {
-                handler.sendEmptyMessageDelayed(INITIALIZATION_FAILED, 100);
-                return;
-            }
 
             if (widget.getTitle() != null && widget.getTitle().length() != 0) {
                 setTopBarTitle(widget.getTitle());
@@ -265,7 +262,11 @@ public class CameraPlugin extends AppBuilderModuleMain {
                 }
             });
 
-            parser = new CameraParcer(widget.getPluginXmlData());
+            String xml = widget.getPluginXmlData().length() == 0
+                    ? Utils.readXmlFromFile(widget.getPathToXmlFile())
+                    : widget.getPluginXmlData();
+
+            parser = new CameraParcer(xml);
             parser.parse();
 
             // concatenating cache path
