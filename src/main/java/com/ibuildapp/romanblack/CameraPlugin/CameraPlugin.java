@@ -10,6 +10,7 @@
  ****************************************************************************/
 package com.ibuildapp.romanblack.CameraPlugin;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,6 +28,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.*;
@@ -67,6 +71,7 @@ public class CameraPlugin extends AppBuilderModuleMain {
     private final int FACEBOOK_PUBLISH_ACTIVITY = 10002;
     private final int TWITTER_PUBLISH_ACTIVITY = 10003;
     private final int TURN_BUTTON_COLOR_BACK = 90;
+    private static final int CAMERA_REQUEST = 1008;
     private String cachePath = "";
     private ImageView photoButton = null;
     private Button btnShare = null;
@@ -240,89 +245,123 @@ public class CameraPlugin extends AppBuilderModuleMain {
             // set our custom layout
             setContentView(R.layout.romanblack_camera_preview);
 
-            // obtaining widget data
-            Intent currentIntent = getIntent();
-            Bundle store = currentIntent.getExtras();
-            widget = (Widget) store.getSerializable("Widget");
-            if (widget == null) {
-                handler.sendEmptyMessageDelayed(INITIALIZATION_FAILED, 100);
-                return;
-            }
+            int permissionCheck = ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.CAMERA);
 
-            if (widget.getTitle() != null && widget.getTitle().length() != 0) {
-                setTopBarTitle(widget.getTitle());
+            if (permissionCheck!= PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},
+                        CAMERA_REQUEST);
             } else {
-                setTopBarTitle(getResources().getString(R.string.camera_plugin));
+               init();
             }
 
-            setTopBarLeftButtonText(getResources().getString(R.string.common_home_upper), true, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finish();
-                }
-            });
 
-            String xml = widget.getPluginXmlData().length() == 0
-                    ? Utils.readXmlFromFile(widget.getPathToXmlFile())
-                    : widget.getPluginXmlData();
+            // obtaining widget data
 
-            parser = new CameraParcer(xml);
-            parser.parse();
 
-            // concatenating cache path
-            cachePath = widget.getCachePath() + "/camera-" + widget.getOrder();
+        } catch (Exception e) {
+        }
+    }
 
-            /**
-             * Changing panel background color
-             *
-             */
-            LinearLayout panel = (LinearLayout) findViewById(R.id.romanblack_camera_panel);
-            panel.setOnClickListener(new OnClickListener() {
-                public void onClick(View view) {
-                    if (!wasCameraClick) {
-                        wasCameraClick = true;
 
-                        Camera.Parameters parameters = camera.getParameters();
+    public void init() {
+        Intent currentIntent = getIntent();
+        Bundle store = currentIntent.getExtras();
+        widget = (Widget) store.getSerializable("Widget");
+        if (widget == null) {
+            handler.sendEmptyMessageDelayed(INITIALIZATION_FAILED, 100);
+            return;
+        }
+
+        if (widget.getTitle() != null && widget.getTitle().length() != 0) {
+            setTopBarTitle(widget.getTitle());
+        } else {
+            setTopBarTitle(getResources().getString(R.string.camera_plugin));
+        }
+
+        setTopBarLeftButtonText(getResources().getString(R.string.common_home_upper), true, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        String xml = widget.getPluginXmlData().length() == 0
+                ? Utils.readXmlFromFile(widget.getPathToXmlFile())
+                : widget.getPluginXmlData();
+
+        parser = new CameraParcer(xml);
+        parser.parse();
+
+        // concatenating cache path
+        cachePath = widget.getCachePath() + "/camera-" + widget.getOrder();
+
+        /**
+         * Changing panel background color
+         *
+         */
+        LinearLayout panel = (LinearLayout) findViewById(R.id.romanblack_camera_panel);
+        panel.setOnClickListener(new OnClickListener() {
+            public void onClick(View view) {
+                if (!wasCameraClick) {
+                    wasCameraClick = true;
+
+                    Camera.Parameters parameters = camera.getParameters();
                     /*    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
                         parameters.setPictureFormat(ImageFormat.JPEG);
                         parameters.setAntibanding(Camera.Parameters.ANTIBANDING_AUTO);
                         parameters.setSceneMode(Camera.Parameters.SCENE_MODE_AUTO);
 */
-                         List<Camera.Size> sizes = parameters.getSupportedPreviewSizes();
-                        Camera.Size maxSize = sizes.get(0);
-                       for (Camera.Size size : sizes) {
-                            if (maxSize.height < size.height) {
-                                maxSize = size;
-                            }
+                    List<Camera.Size> sizes = parameters.getSupportedPreviewSizes();
+                    Camera.Size maxSize = sizes.get(0);
+                    for (Camera.Size size : sizes) {
+                        if (maxSize.height < size.height) {
+                            maxSize = size;
                         }
-                        Log.d(TAG, String.format("height = %d, width = %d", maxSize.height, maxSize.width));
-
-                        parameters.setPreviewSize(maxSize.width, maxSize.height);
-                        //parameters.setPictureSize(maxSize.width, maxSize.height);
-                        camera.setParameters(parameters);
-                        camera.takePicture(null, null, mPicture);
-                        // play sound
-                        MediaPlayer mp = MediaPlayer.create(CameraPlugin.this,
-                                R.raw.romanblack_camera_shot_sound);
-                        mp.setVolume(10, 10);
-                        mp.start();
                     }
+                    Log.d(TAG, String.format("height = %d, width = %d", maxSize.height, maxSize.width));
+
+                    parameters.setPreviewSize(maxSize.width, maxSize.height);
+                    //parameters.setPictureSize(maxSize.width, maxSize.height);
+                    camera.setParameters(parameters);
+                    camera.takePicture(null, null, mPicture);
+                    // play sound
+                    MediaPlayer mp = MediaPlayer.create(CameraPlugin.this,
+                            R.raw.romanblack_camera_shot_sound);
+                    mp.setVolume(10, 10);
+                    mp.start();
                 }
-            });
-
-
-            /**
-             * Starting camera
-             *
-             */
-            pm = this.getPackageManager();
-            if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                startCamera(10);
-            } else {
-                handler.sendEmptyMessageDelayed(HAVE_NO_CAMERA, 100);
             }
+        });
 
-        } catch (Exception e) {
+
+        /**
+         * Starting camera
+         *
+         */
+        pm = this.getPackageManager();
+        if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            startCamera(10);
+        } else {
+            handler.sendEmptyMessageDelayed(HAVE_NO_CAMERA, 100);
+        }
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case CAMERA_REQUEST: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                  init();
+                } else {
+                    finish();
+                }
+                return;
+            }
         }
     }
 
